@@ -1,8 +1,7 @@
 %%% -------------------------------------------------------------------
-%%% Author  : uabjle
-%%% Description : dbase using dets 
+%%% @author  : Joq Erlang
+%%% @doc Centralized log service   
 %%%
-%%% Created : 10 dec 2012
 %%% -------------------------------------------------------------------
 -module(log). 
   
@@ -37,10 +36,17 @@
 %% External functions
 %% ====================================================================
 %% --------------------------------------------------------------------
-%% Function: 
+%% @doc Function: day(Y,M,D) -> [{{Y1,M1,D1},Time,IpAddr,Port,Pod,Module,Line,Severity,Msg}]
 %% Description:
 %% Returns: non
 %% --------------------------------------------------------------------
+
+%-spec(day(string(),string(),string())->[{{string(),string(),string()},
+%					 time(),string(),integer(),node(),module(),line(),string(),string()}]).
+
+-spec(day(Y::string(),M::string(),S::string())->[{{Y::string(),M::string(),S::string()},
+					 Time::time(),IpAddr::string(),Port::integer(),Pod::node(),
+						  Module::module(),Line::line(),Severity::string(),Msg::string()}]).
 day(Y,M,D)->
     {ok,Info}=file:consult(?LATEST_LOG),
     L=[{S#syslog_info.date,S#syslog_info.time,S#syslog_info.ip_addr,S#syslog_info.port,

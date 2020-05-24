@@ -1,14 +1,10 @@
 %%% -------------------------------------------------------------------
-%%% Author  : Joq Erlang
-%%% Description : log_service 
-%%% One and centralized log service in the system   
-%%% Solution is based on  syslog 
-%%% Log files max 10 Mb. 
-%%% current file = latest.log
-%%% full file =date_time.log stored in syslog_dir
-%%%  
-%%%  
-%%% Created : 10 dec 2012
+%%% @author  : Joq Erlang
+%%% @doc Centralized log service   
+%%%  Solution is based on  syslog 
+%%%  Log files max 10 . 
+%%%  current file = latest.log
+%%%  full file =date_time.log stored in syslog_dir
 %%% -------------------------------------------------------------------
 -module(log_service).  
 
@@ -71,8 +67,11 @@ stop()-> gen_server:call(?MODULE, {stop},infinity).
 
 
 %%-----------------------------------------------------------------------
+
+-spec(ping()->{pong,node(),module()}).
 ping()->
     gen_server:call(?MODULE, {ping},infinity).
+
 
 year(Year)->
     gen_server:call(?MODULE, {year,Year},infinity).

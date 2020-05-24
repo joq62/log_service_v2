@@ -1,0 +1,2 @@
+%% encoding: UTF-8
+{modules,[log,log_service,log_service_app,log_service_sup]}.
