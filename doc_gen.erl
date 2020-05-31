@@ -36,7 +36,8 @@
 start()->
    % os:cmd("rm -rf doc/*"),
     {ok,Files}=file:list_dir("src"),
-    ErlFiles=[filename:join("src",FileName)||FileName<-Files],
+    ErlFiles=[filename:join("src",FileName)||FileName<-Files,filename:extension(FileName)==".erl"],
+    io:format("~p~n",[{?MODULE,?LINE,ErlFiles}]),
     ok=edoc:files(ErlFiles,[{dir,"doc"}]).
    
 %% --------------------------------------------------------------------
