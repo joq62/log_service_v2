@@ -40,10 +40,10 @@ start()->
 %% -------------------------------------------------------------------
 send_msg()->
   %  log_service:msg({error,[node(),?MODULE,?FILE,?LINE,date(),time(),'error 1']}),
-    log_service:msg(?LOG_INFO(error,'error 1')),
-    log_service:msg(?LOG_INFO(error,'error 2')),
-    log_service:msg(?LOG_INFO(event,'event 1')),
-    log_service:msg(?LOG_INFO(event,'event 2')),
+    ?LOG_INFO(error,'error 1'),
+    ?LOG_INFO(error,'error 2'),
+    ?LOG_INFO(event,'event 1'),
+    ?LOG_INFO(event,'event 2'),
 %    log_service:msg({error,[node(),?MODULE,?FILE,?LINE,date(),time(),'error 2']}),  
 %    log_service:msg({event,[node(),?MODULE,?FILE,?LINE,date(),time(),'event 1']}),
 %    log_service:msg({event,[node(),?MODULE,?FILE,?LINE,date(),time(),'event 2']}),  
