@@ -1,10 +1,11 @@
 %%% -------------------------------------------------------------------
 %%% @author  : Joq Erlang
-%%% @doc Centralized log service   
-%%%  Solution is based on  syslog 
-%%%  Log files max 10 . 
-%%%  current file = latest.log
-%%%  full file =date_time.log stored in syslog_dir
+%%% @doc local log service   
+%%%  Solution is based on sys 
+%%% Services sends event/error msg to log_service and they are logged 
+%%% in the process (not in file)
+%%% Central OaM functions for information 
+%%%  
 %%% -------------------------------------------------------------------
 -module(log_service).  
 
@@ -21,10 +22,8 @@
 %% --------------------------------------------------------------------
 
 
--record(state,{myip,dns_address,dns_socket}).
+-record(state,{}).
 
-%% Definitions 
--define(HB_INTERVAL,1*20*1000).
 
 %% --------------------------------------------------------------------
 
@@ -36,6 +35,8 @@
 
 
 -export([ping/0,
+	 msg/1,
+	 get/1,
 	 store/1,all/0,
 	 severity/1,node/3,module/1,
 	 latest_event/0,latest_events/1,
@@ -57,7 +58,14 @@
 
 %% Asynchrounus Signals
 
+get(all)->
+    rpc:call(node(),log,get,[all]);
 
+get(error)->
+    rpc:call(node(),log,get,[error]);
+
+get(event)->
+    rpc:call(node(),log,get,[event]).
 
 %% Gen server functions
 
@@ -67,6 +75,8 @@ stop()-> gen_server:call(?MODULE, {stop},infinity).
 
 
 %%-----------------------------------------------------------------------
+msg(Msg)->
+    gen_server:cast(?MODULE, {msg,Msg}).
 
 -spec(ping()->{pong,node(),module()}).
 ping()->
@@ -124,7 +134,7 @@ heart_beat(Interval)->
 init([]) ->
        % Initiated the app
    
-    ok=log:init_logfile(),	
+ %   ok=sys:log(?MODULE,true),	
        
     {ok, #state{}}.
     
@@ -199,8 +209,8 @@ handle_call(Request, From, State) ->
 %%          {noreply, State, Timeout} |
 %%          {stop, Reason, State}            (terminate/2 is called)
 %% --------------------------------------------------------------------
-handle_cast({store,SysLog}, State) ->
-    ok=log:store(SysLog),
+
+handle_cast({msg,_Msg}, State) ->
     {noreply, State};
 
 
