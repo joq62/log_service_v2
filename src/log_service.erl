@@ -132,9 +132,6 @@ heart_beat(Interval)->
 %
 %% --------------------------------------------------------------------
 init([]) ->
-       % Initiated the app
-   
- %   ok=sys:log(?MODULE,true),	
        
     {ok, #state{}}.
     
@@ -150,7 +147,7 @@ init([]) ->
 %% --------------------------------------------------------------------
 
 handle_call({store,SysLog}, _From, State) ->
-     Reply=log:store(SysLog),
+    Reply=not_implemented,
     {reply, Reply, State};
 
 

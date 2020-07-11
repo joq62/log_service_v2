@@ -10,10 +10,11 @@
 %% Include files
 %% --------------------------------------------------------------------
 -include_lib("eunit/include/eunit.hrl").
--include("syslog.hrl").
+-include("log.hrl").
 %% --------------------------------------------------------------------
 -export([start/0]).
 
+-define(Pattern1,#log{log_node=Node,type=error,node=node_1,module=?MODULE,file=?FILE,line=?LINE,date={2020,12,25},time={15,00,00},msg='error 1'}).
 %% ====================================================================
 %% External functions
 %% ====================================================================
@@ -24,10 +25,11 @@
 %% Returns: non
 %% --------------------------------------------------------------------
 start()->
-    send_msg(),
-    all(),
-    error(),
-    event(),    
+    send_msg_1(),
+    one_msg(),
+    %all_msgs(),
+ %   error(),
+  %  event(),    
     ok.
 
 
@@ -38,18 +40,33 @@ start()->
 %% Description: Initiate the eunit tests, set upp needed processes etc
 %% Returns: non
 %% -------------------------------------------------------------------
-send_msg()->
-  %  log_service:msg({error,[node(),?MODULE,?FILE,?LINE,date(),time(),'error 1']}),
-    ?LOG_INFO(error,'error 1'),
-    ?LOG_INFO(error,'error 2'),
-    ?LOG_INFO(event,'event 1'),
-    ?LOG_INFO(event,'event 2'),
-%    log_service:msg({error,[node(),?MODULE,?FILE,?LINE,date(),time(),'error 2']}),  
-%    log_service:msg({event,[node(),?MODULE,?FILE,?LINE,date(),time(),'event 1']}),
-%    log_service:msg({event,[node(),?MODULE,?FILE,?LINE,date(),time(),'event 2']}),  
-    ok.    
+send_msg_1()->
+    Node=node(),
+    log_service:msg(),
+    ok.
 
-all()->
+send_msg_all()-> 
+    
+%    log_service:msg({error,[node(),?MODULE,?FILE,?LINE,{2019,12,24},{15,00,00},'error 2']}),
+ %   log_service:msg({error,[node(),?MODULE,?FILE,?LINE,{2020,12,23},{15,00,00},'error 3']}),
+  %  log_service:msg({event,[node(),?MODULE,?FILE,?LINE,{2019,12,24},{14,59,59},'event 1']}), 
+  %  ?LOG_INFO(error,'error 2'),
+   % ?LOG_INFO(event,'event 1'),
+   % ?LOG_INFO(event,'event 2'), 
+    ok.   
+
+one_msg()->
+    Node=node(),
+    {ok,[{in,{'$gen_cast',
+	      {msg,LogMsg}}},
+	      {Reply,State}]}=log_service:get(all),
+    ?assertEqual({Node,error,node_1,{2020,12,25},{15,00,00},'error 1'},
+		 {LogMsg#log.log_node,LogMsg#log.type,LogMsg#log.node,LogMsg#log.date,LogMsg#log.time,LogMsg#log.msg}),
+
+%    ?assertEqual({ok,glurk},log_service:get(all)),
+    ok.
+    
+all_msgs()->
     Node=node(),
     ?assertMatch({ok,[{in,{'$gen_cast',{msg,{error,[Node,?MODULE,?FILE,_,_,_,'error 1']}}}},
 		      {noreply,{state}},
