@@ -25,7 +25,8 @@
 %% External functions
 %% ====================================================================
 get(all)->
-    sys:log(log_service,get);
+    {ok,Log}=sys:log(log_service,get),
+    Log;
 get(error)->
     {ok,Log}=sys:log(log_service,get),
     [{error,Err}||{in,{'$gen_cast',{msg,{error,Err}}}}<-Log];
